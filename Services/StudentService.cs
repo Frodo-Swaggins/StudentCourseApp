@@ -4,6 +4,7 @@ using StudentCourseApp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace StudentCourseApp.Services
 {
@@ -20,6 +21,15 @@ namespace StudentCourseApp.Services
         public async Task<List<Student>> GetAll()
         {
             return await _context.Students.ToListAsync();
+        }
+
+        //get all student with their enrollments
+        public async Task<List<Student>> GetAllWithEnrollments()
+        {
+            return await _context.Students
+                .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Course)
+                .ToListAsync();
         }
 
         //get student by id
@@ -52,10 +62,20 @@ namespace StudentCourseApp.Services
         }
 
         //add new student
-        public async Task Add(Student student)
+        public async Task<bool> Add(Student student)
         {
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (Regex.IsMatch(student.Email, pattern))
+            {
+                _context.Students.Add(student);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
         //update existing student

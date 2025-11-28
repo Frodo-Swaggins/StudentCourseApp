@@ -48,7 +48,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        students = await StudentService.GetAll();
+        students = await StudentService.GetAllWithEnrollments();
     }
 
     private void EditStudent(int id)

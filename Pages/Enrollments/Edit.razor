@@ -61,14 +61,19 @@ else
         _ => "F"
     };
 
+    public string getLetterGrade()
+    {
+        return LetterGrade;
+    }
+
 
     private async Task SaveChanges()
     {
         if (enrollment != null)
         {
             enrollment.Percentage = percentage;
-            enrollment.Grade = letterGrade;
-            await EnrollmentService.ChangeGrade(enrollment.Id, letterGrade, percentage);
+            enrollment.Grade = getLetterGrade();
+            await EnrollmentService.ChangeGrade(enrollment.Id, enrollment.Grade, enrollment.Percentage);
             Navigation.NavigateTo("/enrollments");
         }
     }

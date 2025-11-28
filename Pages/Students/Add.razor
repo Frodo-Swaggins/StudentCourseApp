@@ -15,6 +15,10 @@
             <ValidationMessage For="@(() => newStudent.Name)" />
         </div>
 
+      @*   <div class="mb-3">
+            <span class="text-danger">@Message</span>
+        </div> *@
+
         <div class="mb-3">
             <label class="form-label fw-bold">Email</label>
             <input class="form-control" @bind="newStudent.Email" placeholder="Enter email address" />
@@ -27,7 +31,7 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-deep-purple me-2 mb-3">
+            <button type="submit" class="btn btn-deep-purple me-2 ">
                 <i class="bi bi-check-circle"></i> Add Student
             </button>
 
@@ -39,6 +43,8 @@
 </div>
 
 @code {
+    private string Message = string.Empty;
+
     private StudentCourseApp.Models.Student newStudent = new()
     {
         DateRegistered = DateTime.UtcNow
@@ -46,8 +52,17 @@
 
     private async Task AddStudent()
     {
-        await StudentService.Add(newStudent);
-        Navigation.NavigateTo("/students");
+        bool success = await StudentService.Add(newStudent);
+        if (success)
+        {
+            Navigation.NavigateTo("/students");
+        }
+        else
+        {
+            Message = "Failed to add student. Invalid Email. Please try again."; 
+            Navigation.NavigateTo("/students/add");
+        }
+        
     }
 
     private void Cancel()
