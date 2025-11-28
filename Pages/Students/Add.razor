@@ -1,0 +1,57 @@
+﻿@page "/students/add"
+@inject StudentCourseApp.Services.StudentService StudentService
+@inject NavigationManager Navigation
+
+<h3 class="mb-3">Add New Student</h3>
+
+<div class="card shadow-sm p-4" style="max-width: 500px;">
+    <EditForm Model="@newStudent" OnValidSubmit="AddStudent">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Full Name</label>
+            <input class="form-control" @bind="newStudent.Name" placeholder="Enter full name" />
+            <ValidationMessage For="@(() => newStudent.Name)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input class="form-control" @bind="newStudent.Email" placeholder="Enter email address" />
+            <ValidationMessage For="@(() => newStudent.Email)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Date Registered</label>
+            <input class="form-control" value="@newStudent.DateRegistered.ToString("yyyy-MM-dd HH:mm")" disabled />
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-deep-purple me-2 mb-3">
+                <i class="bi bi-check-circle"></i> Add Student
+            </button>
+
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">
+                <i class="bi bi-x-circle"></i> Cancel
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private StudentCourseApp.Models.Student newStudent = new()
+    {
+        DateRegistered = DateTime.UtcNow
+    };
+
+    private async Task AddStudent()
+    {
+        await StudentService.Add(newStudent);
+        Navigation.NavigateTo("/students");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/students");
+    }
+}

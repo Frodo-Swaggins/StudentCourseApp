@@ -1,0 +1,101 @@
+﻿@page "/enrollments/add"
+@inject StudentCourseApp.Services.StudentService StudentService
+@inject StudentCourseApp.Services.CourseService CourseService
+@inject StudentCourseApp.Services.EnrollmentService EnrollmentService
+@inject NavigationManager Navigation
+
+<h3>Enroll Student in Course</h3>
+
+<div class="card p-4 shadow-sm" style="max-width:500px">
+
+    <div class="mb-3">
+        <span class="text-danger">@Message</span>
+    </div>
+    <!-- Student Dropdown -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Student</label>
+        <select class="form-select" @bind="selectedStudentId">
+            <option value="0">Select a student</option>
+            @foreach (var s in students)
+            {
+                <option value="@s.Id">@s.Name</option>
+            }
+        </select>
+    </div>
+
+    <!-- Course Dropdown -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Course</label>
+        <select class="form-select" @bind="selectedCourseId">
+            <option value="0">Select a course</option>
+            @foreach (var c in courses)
+            {
+                <option value="@c.Id">@c.Title</option>
+            }
+        </select>
+    </div>
+
+    <!-- Percentage input -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Percentage</label>
+        <input type="number"
+               min="0" max="100"
+               class="form-control"
+               @bind-value="percentage"
+               @bind-value:event="oninput" />
+    </div>
+
+    <!-- Letter Grade (auto updated) -->
+    <div class="mb-3 mb">
+        <label class="form-label fw-bold">Letter Grade</label>
+        <input class="form-control" value="@LetterGrade" readonly />
+    </div>
+
+    <button class="btn btn-deep-purple me-2 mb-3" @onclick="EnrollStudent">Enroll</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</div>
+
+@code {
+    private List<StudentCourseApp.Models.Student> students = new();
+    private List<StudentCourseApp.Models.Course> courses = new();
+    private int selectedStudentId;
+    private int selectedCourseId;
+    private decimal percentage;
+    private string Message = string.Empty;
+
+    // Computed property for live letter grade
+    private string LetterGrade => percentage switch
+    {
+        >= 80 => "A",
+        >= 70 => "B",
+        >= 60 => "C",
+        >= 50 => "D",
+        _ => "F"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await StudentService.GetAll();
+        courses = await CourseService.GetAll();
+    }
+
+    private async Task EnrollStudent()
+    {
+        if (selectedStudentId != 0 && selectedCourseId != 0)
+        {
+            bool success = await EnrollmentService.Enroll(selectedStudentId, selectedCourseId, LetterGrade, percentage);
+
+            if (success) 
+            {
+                Navigation.NavigateTo("/enrollments");
+            }
+            else
+            {
+                Message = "Enrollment failed. The student is already be enrolled in this course.";
+                Navigation.NavigateTo("/enrollments/add");
+            }
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/enrollments");
+}

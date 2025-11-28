@@ -1,0 +1,54 @@
+﻿@page "/courses/add"
+@inject StudentCourseApp.Services.CourseService CourseService
+@inject NavigationManager Navigation
+
+<h3>Add New Course</h3>
+
+<div class="card p-4 shadow-sm" style="max-width:500px">
+
+    <!-- Course Title -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Course Title</label>
+        <input class="form-control" @bind="courseTitle" placeholder="Enter course title" />
+    </div>
+
+    <!-- Course Description -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Description</label>
+        <textarea class="form-control" @bind="description" rows="3" placeholder="Enter course description"></textarea>
+    </div>
+
+    <!-- Course Credits -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Credits</label>
+        <input type="number" class="form-control" @bind="credits" min="1" placeholder="Enter credits" />
+    </div>
+
+    <!-- Course Buttons -->
+    <button class="btn btn-deep-purple me-2 mb-3" @onclick="AddCourse">Add Course</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</div>
+
+@code {
+    private string courseTitle;
+    private string description;
+    private int credits;
+
+    private async Task AddCourse()
+    {
+        if (!string.IsNullOrWhiteSpace(courseTitle))
+        {
+            var course = new StudentCourseApp.Models.Course
+            {
+                Title = courseTitle,
+                Description = description,
+                Credits = credits
+            };
+
+            await CourseService.Add(course);
+            Navigation.NavigateTo("/courses");
+        }
+    }
+
+    private void Cancel() => Navigation.NavigateTo("/courses");
+}

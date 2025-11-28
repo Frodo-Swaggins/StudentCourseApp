@@ -1,0 +1,42 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">StudentCourseApp</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link text-white" href="/" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door-fill me-2"></i> Home
+            </NavLink>
+        </li>
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link text-white" href="/students" Match="NavLinkMatch.All">
+                <i class="bi bi-people-fill me-2"></i> Students
+            </NavLink>
+        </li>
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link text-white" href="/courses" Match="NavLinkMatch.All">
+                <i class="bi bi-book me-2"></i> Courses
+            </NavLink>
+        </li>
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link text-white" href="/enrollments" Match="NavLinkMatch.All">
+                <i class="bi bi-journal-check me-2"></i> Enrollments
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

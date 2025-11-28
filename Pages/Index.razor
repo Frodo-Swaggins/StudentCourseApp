@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<h1 class="mb-4">Student Courses Management</h1>
+
+<div class="d-flex flex-column gap-3" style="max-width:300px">
+    <button class="btn btn-dark-purple mb-3" @onclick="GoToStudent">
+        <i class="bi bi-people-fill"></i> Manage Students
+    </button>
+
+    <button class="btn btn-dark-purple mb-3" @onclick="GoToCourse">
+        <i class="bi bi-book"></i> Manage Courses
+    </button>
+
+    <button class="btn btn-dark-purple mb-3" @onclick="GoToEnrollment">
+        <i class="bi bi-journal-check"></i> Manage Enrollments
+    </button>
+</div>
+
+@code {
+
+    private void GoToEnrollment()
+    {
+        Navigation.NavigateTo("/enrollments/");
+    }
+
+        private void GoToCourse()
+    {
+        Navigation.NavigateTo("/courses/");
+    }
+
+    private void GoToStudent()
+    {
+        Navigation.NavigateTo("/students/");
+    }
+}

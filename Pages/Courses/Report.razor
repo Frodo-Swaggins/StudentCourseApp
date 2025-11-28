@@ -1,0 +1,76 @@
+﻿@page "/courses/report/{CourseId:int}"
+@inject StudentCourseApp.Services.CourseService CourseService
+@inject NavigationManager Navigation
+
+<h3>Course Details</h3>
+
+@if (course == null)
+{
+    <div class="alert alert-info">Loading course...</div>
+}
+else
+{
+    <div class="card shadow-sm p-3 mb-3">
+        <h4>@course.Title</h4>
+        <p><strong>Description:</strong> @course.Description</p>
+        <p><strong>Credits:</strong> @course.Credits</p>
+
+        <h5>Enrolled Students</h5>
+        @if (course.Enrollments.Count == 0)
+        {
+            <p>No students enrolled yet.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Student</th>
+                        <th>Grade</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in course.Enrollments.Where(e => e.IsActive))
+                    {
+                        <tr>
+                            <td>@e.Student.Name</td>
+                            <td>@e.Grade</td>
+                            <td>@e.Percentage</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p><strong>Class Average:</strong> @ClassAverage.ToString("0.00")%</p>
+        }
+    </div>
+
+    <button class="btn btn-secondary" @onclick="BackToList">Back to Courses</button>
+}
+
+@code {
+    [Parameter] public int CourseId { get; set; }
+
+    private StudentCourseApp.Models.Course course;
+    private decimal ClassAverage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        course = await CourseService.GetById(CourseId);
+
+        if (course != null && course.Enrollments.Any())
+        {
+            var percentages = course.Enrollments
+                .Where(e => e.IsActive)
+                .Select(e => e.Percentage);
+
+            ClassAverage = percentages.Any() ? percentages.Average() : 0;
+        }
+    }
+
+    private void BackToList()
+    {
+        Navigation.NavigateTo("/courses");
+    }
+}

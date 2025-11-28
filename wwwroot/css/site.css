@@ -1,0 +1,101 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a, .btn-link {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+/* Gradient buttons */
+.btn-dark-purple {
+    background-color: #4b0082; /* dark purple */
+    color: white;
+}
+
+.btn-navy {
+    background-color: #1a237e; /* navy blue */
+    color: white;
+}
+
+.btn-indigo {
+    background-color: #3f51b5; /* indigo */
+    color: white;
+}
+
+.btn-deep-purple {
+    background-color: #673ab7; /* deep purple */
+    color: white;
+}
+
+.btn-blue-purple {
+    background-color: #5c6bc0; /* blueish purple */
+    color: white;
+}
+
+/* Gradient button */
+.btn-gradient {
+    background-image: linear-gradient(45deg, #4b0082, #3f51b5, #1a237e);
+    color: white;
+    border: none;
+    transition: filter 0.2s;
+}
+
+    .btn-gradient:hover {
+        filter: brightness(0.9);
+    }
+
+/* Striped gradient button */
+.btn-striped-gradient {
+    background-color: #3f51b5;
+    background-image: repeating-linear-gradient( 45deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50% );
+    color: white;
+    border: none;
+    transition: filter 0.2s;
+}
+
+    .btn-striped-gradient:hover {
+        filter: brightness(0.9);
+    }

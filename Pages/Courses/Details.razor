@@ -1,0 +1,52 @@
+﻿@page "/courses/details/{CourseId:int}"
+@inject StudentCourseApp.Services.CourseService CourseService
+@inject NavigationManager Navigation
+
+<h3>Course Details</h3>
+
+@if (courseReport == null)
+{
+    <div class="alert alert-info">Loading course details...</div>
+}
+else
+{
+    <div class="card shadow-sm p-3 mb-3">
+        <h4>@courseReport.CourseTitle</h4>
+        <p><strong>Description:</strong> @courseReport.Description</p>
+        <p><strong>Credits:</strong> @courseReport.Credits</p>
+
+        <h5>Enrolled Students</h5>
+        @if (!courseReport.StudentGrades.Any())
+        {
+            <p>No students enrolled yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var student in courseReport.StudentGrades)
+                {
+                    <li>@student.StudentName - @student.Grade</li>
+
+                }
+            </ul>
+        }
+    </div>
+
+    <button class="btn btn-secondary" @onclick="GoBack">Back to Courses</button>
+}
+
+@code {
+    [Parameter] public int CourseId { get; set; }
+
+    private StudentCourseApp.Services.CourseReportViewModel courseReport;
+
+    protected override async Task OnInitializedAsync()
+    {
+        courseReport = await CourseService.GenerateReport(CourseId);
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/courses");
+    }
+}

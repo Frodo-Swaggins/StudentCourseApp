@@ -1,0 +1,75 @@
+﻿@page "/students"
+@inject StudentCourseApp.Services.StudentService StudentService
+@inject NavigationManager Navigation
+
+<h3>Students</h3>
+
+<div class="mb-3">
+
+    <button class="btn btn-dark-purple" @onclick="GoToAddStudent">
+        <i class="bi bi-plus-circle"></i> Add Student
+    </button>
+
+</div>
+
+<table class="table table-hover table-striped shadow-sm">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Courses Enrolled</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in students)
+        {
+            <tr>
+                <td>@student.Name</td>
+                <td>@(student.Enrollments?.Count ?? 0)</td>
+                <td>
+                    <button class="btn btn-blue-purple btn-sm me-2" @onclick="() => EditStudent(student.Id)">Edit</button>
+                    <button class="btn btn-navy btn-sm" @onclick="() => DeleteStudent(student.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<div>
+    <button class="btn btn-deep-purple btn-sm" @onclick="() => BackToHome()">
+        Back To Home
+    </button>
+</div>
+
+@code {
+    private List<StudentCourseApp.Models.Student> students = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await StudentService.GetAll();
+    }
+
+    private void EditStudent(int id)
+    {
+        Navigation.NavigateTo($"/students/edit/{id}");
+    }
+
+    private async Task DeleteStudent(int id)
+    {
+        await StudentService.DeleteById(id);
+        students = await StudentService.GetAll();
+    }
+
+    private void GoToAddStudent()
+    {
+        Navigation.NavigateTo("/students/add");
+    }
+
+    private void BackToHome()
+    {
+        Navigation.NavigateTo($"/");
+    }
+
+}
